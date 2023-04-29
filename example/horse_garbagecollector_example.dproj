@@ -103,7 +103,8 @@
         <DCCReference Include="DTO.Arquivo.pas"/>
         <DCCReference Include="..\src\Horse.GarbageCollector.pas"/>
         <DCCReference Include="..\src\Horse.GarbageCollector.Interfaces.pas"/>
-        <DCCReference Include="..\src\Horse.GarbageCollector.Core.pas"/>
+        <DCCReference Include="Model.Interfaces.pas"/>
+        <DCCReference Include="Model.Arquivo.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -11,7 +11,8 @@ uses
   DTO.Arquivo in 'DTO.Arquivo.pas',
   Horse.GarbageCollector in '..\src\Horse.GarbageCollector.pas',
   Horse.GarbageCollector.Interfaces in '..\src\Horse.GarbageCollector.Interfaces.pas',
-  Horse.GarbageCollector.Core in '..\src\Horse.GarbageCollector.Core.pas';
+  Model.Interfaces in 'Model.Interfaces.pas',
+  Model.Arquivo in 'Model.Arquivo.pas';
 
 begin
   try
