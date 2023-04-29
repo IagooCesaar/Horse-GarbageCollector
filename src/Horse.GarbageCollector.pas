@@ -5,15 +5,17 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  System.Generics.Collections,
 
   Horse,
   Horse.GarbageCollector.Interfaces;
 
 type
-  THorseGarbageCollector = class(TInterfacedObject,
+  THorseGarbageCollector = class(TNoRefCountObject,
     IHorseGarbageCollectorObservers)
   private
-    FList: IInterfaceList;
+    //FObservers: TInterfaceList;
+    FObservers: TList<IHorseGarbageCollectorObserver>;
 
     class var FCollector: THorseGarbageCollector;
 
@@ -51,43 +53,49 @@ function THorseGarbageCollector.Add(
   Observer: IHorseGarbageCollectorObserver): IHorseGarbageCollectorObservers;
 begin
   Result := Self;
-  FList.Add(Observer);
+  FObservers.Add(Observer);
 end;
 
 function THorseGarbageCollector.Count: Integer;
 begin
-  Result := FList.Count;
+  FObservers.TrimExcess;
+  Result := FObservers.Count;
 end;
 
 constructor THorseGarbageCollector.Create;
 begin
-  FList := TInterfaceList.Create;
+  //FObservers := TInterfaceList.Create;
+  FObservers := TList<IHorseGarbageCollectorObserver>.Create;
 end;
 
 destructor THorseGarbageCollector.Destroy;
 begin
-
+  FObservers.Free;
   inherited;
 end;
 
 procedure THorseGarbageCollector.DoGarbageCollection;
 var LFileList : TStringList; LObserver : IHorseGarbageCollectorObserver;
 begin
-  for var i := Pred(FList.Count) downto 0 do
+  for var i := Pred(Self.Count) downto 0 do
   begin
-    LObserver := FList.Items[i] as IHorseGarbageCollectorObserver;
+    if not Assigned(Self.Get(i))
+    then Continue;
+
+    LObserver := Self.Get(i) as IHorseGarbageCollectorObserver;
 
     if LObserver.CanCollectGarbage
     then begin
       LFileList := LObserver.GetFileListToDelete;
-      try
+      if Assigned(LFileList)
+      then try
         for var f := 0 to Pred(LFileList.Count) do
           if FileExists(LFileList.Strings[f])
           then DeleteFile(LFileList.Strings[f]);
       finally
         LFileList.Free;
       end;
-      FList.Remove(LObserver);
+      FObservers.Remove(LObserver);
     end;
   end;
 end;
@@ -95,7 +103,7 @@ end;
 function THorseGarbageCollector.Get(
   Index: Integer): IHorseGarbageCollectorObserver;
 begin
-  Result := FList.Items[Index] as IHorseGarbageCollectorObserver;
+  Result := FObservers.Items[Index] as IHorseGarbageCollectorObserver;
 end;
 
 class function THorseGarbageCollector.GetCollector: THorseGarbageCollector;

@@ -3,12 +3,21 @@ unit Model.Arquivo;
 interface
 
 uses
+  System.Classes,
+  System.SysUtils,
+
   Model.Interfaces,
+  Horse.GarbageCollector.Interfaces,
+  Horse.GarbageCollector,
   DTO.Arquivo;
 
 type
-  TModelArquivo = class(TInterfacedObject, IModelArquivo)
+  TModelArquivo = class(TInterfacedObject,
+    IModelArquivo,
+    IHorseGarbageCollectorObserver)
   private
+    FPodeDeletar: Boolean;
+    FListaArquivos: TStringList;
   public
     class function New: IModelArquivo;
     constructor Create;
@@ -16,19 +25,27 @@ type
 
     { IModelArquivo }
     function CriarArquivo(ADTOArquivo: TDTOArquivo): String;
+
+    { IHorseGarbageCollectorObserver }
+    function CanCollectGarbage: Boolean;
+    function GetFileListToDelete: TStringList;
   end;
 
 implementation
 
-uses
-  System.SysUtils,
-  System.Classes;
-
 { TModelArquivo }
+
+function TModelArquivo.CanCollectGarbage: Boolean;
+begin
+  Result := FPodeDeletar;
+end;
 
 constructor TModelArquivo.Create;
 begin
+  FPodeDeletar := False;
+  FListaArquivos := TStringList.Create;
 
+  THorseGarbageCollector.GetCollector.Add(Self);
 end;
 
 function TModelArquivo.CriarArquivo(ADTOArquivo: TDTOArquivo): String;
@@ -50,12 +67,19 @@ begin
     then FreeAndNIl(ADTOArquivo);
   end;
   Result := LPath;
+  FPodeDeletar := True;
+  FListaArquivos.Add(LPath);
 end;
 
 destructor TModelArquivo.Destroy;
 begin
 
   inherited;
+end;
+
+function TModelArquivo.GetFileListToDelete: TStringList;
+begin
+  Result := FListaArquivos;
 end;
 
 class function TModelArquivo.New: IModelArquivo;
