@@ -21,6 +21,7 @@ uses
   Horse,
   Horse.Jhonson,
   Horse.HandleException,
+  Horse.GarbageCollector,
 
   Controllers.Example;
 
@@ -37,7 +38,8 @@ begin
   {$ENDIF}
 
   THorse.Use(Jhonson('UTF-8'))
-        .Use(HandleException);
+        .Use(HandleException)
+        .Use(THorseGarbageCollector.GetCollector.HorseCallback);
 
   Controllers.Example.Registry;
 

@@ -8,7 +8,10 @@ uses
   System.SysUtils,
   App in 'App.pas',
   Controllers.Example in 'Controllers.Example.pas',
-  DTO.Arquivo in 'DTO.Arquivo.pas';
+  DTO.Arquivo in 'DTO.Arquivo.pas',
+  Horse.GarbageCollector in '..\src\Horse.GarbageCollector.pas',
+  Horse.GarbageCollector.Interfaces in '..\src\Horse.GarbageCollector.Interfaces.pas',
+  Horse.GarbageCollector.Core in '..\src\Horse.GarbageCollector.Core.pas';
 
 begin
   try
