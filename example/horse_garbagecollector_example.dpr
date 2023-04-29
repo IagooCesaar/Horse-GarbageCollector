@@ -6,7 +6,9 @@ program horse_garbagecollector_example;
 
 uses
   System.SysUtils,
-  App in 'App.pas';
+  App in 'App.pas',
+  Controllers.Example in 'Controllers.Example.pas',
+  DTO.Arquivo in 'DTO.Arquivo.pas';
 
 begin
   try

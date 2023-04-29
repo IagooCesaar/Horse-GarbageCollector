@@ -20,7 +20,9 @@ uses
 
   Horse,
   Horse.Jhonson,
-  Horse.HandleException;
+  Horse.HandleException,
+
+  Controllers.Example;
 
 function TApp.BaseURL: String;
 begin
@@ -36,6 +38,8 @@ begin
 
   THorse.Use(Jhonson('UTF-8'))
         .Use(HandleException);
+
+  Controllers.Example.Registry;
 
   THorse.Listen(StrToIntDef(GetEnvironmentVariable('SERVER_PORT'), 9000),
     procedure
