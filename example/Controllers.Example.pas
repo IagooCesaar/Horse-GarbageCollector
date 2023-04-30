@@ -25,6 +25,7 @@ begin
   LRetorno.AddPair('path', TJSONString.Create(LPath));
   LRetorno.AddPair('exists', TJSONBool.Create(FileExists(LPath)));
 
+  Sleep(2000);
   Resp.Status(201).Send(LRetorno);
 end;
 
