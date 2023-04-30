@@ -14,8 +14,9 @@ type
   THorseGarbageCollector = class(TNoRefCountObject,
     IHorseGarbageCollectorObservers)
   private
+    FObservers: IInterfaceList;
     //FObservers: TInterfaceList;
-    FObservers: TList<IHorseGarbageCollectorObserver>;
+    //FObservers: TList<IHorseGarbageCollectorObserver>;
 
     class var FCollector: THorseGarbageCollector;
 
@@ -58,19 +59,18 @@ end;
 
 function THorseGarbageCollector.Count: Integer;
 begin
-  FObservers.TrimExcess;
+  //FObservers.TrimExcess;
   Result := FObservers.Count;
 end;
 
 constructor THorseGarbageCollector.Create;
 begin
-  //FObservers := TInterfaceList.Create;
-  FObservers := TList<IHorseGarbageCollectorObserver>.Create;
+  FObservers := TInterfaceList.Create;
 end;
 
 destructor THorseGarbageCollector.Destroy;
 begin
-  FObservers.Free;
+  //FObservers.Free;
   inherited;
 end;
 
