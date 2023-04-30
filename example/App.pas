@@ -22,6 +22,7 @@ uses
   Horse.Jhonson,
   Horse.HandleException,
   Horse.GarbageCollector,
+  Horse.OctetStream,
 
   Controllers.Example;
 
@@ -39,7 +40,8 @@ begin
 
   THorse.Use(Jhonson('UTF-8'))
         .Use(HandleException)
-        .Use(THorseGarbageCollector.GetCollector.HorseCallback);
+        .Use(THorseGarbageCollector.GetCollector.HorseCallback) // important: before OctetStream
+        .Use(OctetStream);
 
   Controllers.Example.Registry;
 

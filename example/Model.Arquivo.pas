@@ -5,10 +5,15 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  Windows,
 
   Model.Interfaces,
   Horse.GarbageCollector.Interfaces,
   Horse.GarbageCollector,
+
+  Horse,
+  Horse.OctetStream,
+
   DTO.Arquivo;
 
 type
@@ -25,6 +30,7 @@ type
 
     { IModelArquivo }
     function CriarArquivo(ADTOArquivo: TDTOArquivo): String;
+    function ObterArquivo(ADTOArquivo: TDTOArquivoStream): TFileReturn;
 
     { IHorseGarbageCollectorObserver }
     function CanCollectGarbage: Boolean;
@@ -63,8 +69,6 @@ begin
   finally
     if LArquivo <> nil
     then FreeAndNil(LArquivo);
-    if ADTOArquivo <> nil
-    then FreeAndNIl(ADTOArquivo);
   end;
   Result := LPath;
   FPodeDeletar := True;
@@ -85,6 +89,30 @@ end;
 class function TModelArquivo.New: IModelArquivo;
 begin
   Result := Self.Create;
+end;
+
+function TModelArquivo.ObterArquivo(ADTOArquivo: TDTOArquivoStream): TFileReturn;
+var LStream: TMemoryStream; LPath : String;
+begin
+  if not FileExists(ADTOArquivo.Path)
+  then raise EHorseException.New
+    .Status(THTTPStatus.BadRequest)
+    .Error('Arquivo não existe');
+
+  LPath := ExtractFilePath(ADTOArquivo.Path)+
+           ExtractFileName(ChangeFileExt(ADTOArquivo.Path, ''))+'_'+
+           FormatDateTime('yyyymmddhhmmsszzz', Now)+
+           ExtractFileExt(ADTOArquivo.Path);
+
+  CopyFile(PWideChar(ADTOArquivo.Path), PWideChar(LPath), False);
+
+  LStream := TMemoryStream.Create;
+  LStream.LoadFromFile(LPath);
+
+  Result := TFileReturn.Create(ExtractFileName(LPath), LStream);
+
+  FPodeDeletar := True;
+  FListaArquivos.Add(LPath);
 end;
 
 end.

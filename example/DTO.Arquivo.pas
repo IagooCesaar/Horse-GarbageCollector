@@ -12,6 +12,13 @@ type
     property Conteudo: String read FConteudo write FConteudo;
   end;
 
+  TDTOArquivoStream = class
+  private
+    FPath: string;
+  public
+    property Path: string read FPath write FPath;
+  end;
+
 implementation
 
 end.
