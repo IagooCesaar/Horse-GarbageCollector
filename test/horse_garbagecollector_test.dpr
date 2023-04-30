@@ -13,7 +13,14 @@ uses
   DUnitX.Loggers.Xml.NUnit,
   {$ENDIF }
   DUnitX.TestFramework,
-  Test.Horse.GarbageCollector.API in 'Test.Horse.GarbageCollector.API.pas';
+  Test.Horse.GarbageCollector.API in 'Test.Horse.GarbageCollector.API.pas',
+  App in '..\example\App.pas',
+  Controllers.Example in '..\example\Controllers.Example.pas',
+  DTO.Arquivo in '..\example\DTO.Arquivo.pas',
+  Model.Arquivo in '..\example\Model.Arquivo.pas',
+  Model.Interfaces in '..\example\Model.Interfaces.pas',
+  Horse.GarbageCollector.Interfaces in '..\src\Horse.GarbageCollector.Interfaces.pas',
+  Horse.GarbageCollector in '..\src\Horse.GarbageCollector.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
